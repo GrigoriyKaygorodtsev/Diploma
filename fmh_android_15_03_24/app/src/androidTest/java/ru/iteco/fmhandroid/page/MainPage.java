@@ -2,40 +2,40 @@ package ru.iteco.fmhandroid.page;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.matcher.RootMatchers;
 
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 
 public class MainPage {
-    ViewInteraction newsTitle = onView(withId(R.id.container_list_news_include_on_fragment_main));
-    ViewInteraction missionButton = onView(withId(R.id.our_mission_image_button));
 
-    ViewInteraction allNewsButton = onView(withId(R.id.all_news_text_view));
+    public static final int mainMenuButton = R.id.main_menu_image_button;
+    public static final int mainPageTag = mainMenuButton;
+    public static final int userProfileButton = R.id.authorization_image_button;
+    public static final int logoutButton = android.R.id.title;
+    public static final int allNewsHeadline = R.id.all_news_text_view;
 
-    public void validatePageLoaded() {
-        newsTitle.check(matches(isDisplayed()));
-        missionButton.check(matches(isDisplayed()));
-        allNewsButton.check(matches(isDisplayed()));
+    public static final int quotesButton = R.id.our_mission_image_button;
+
+    static PageFunctional pageFunctional = new PageFunctional();
+
+    public void logOut() {
+        Allure.step("log out (выход из профиля)");
+        pageFunctional.waitPage(mainPageTag);
+        onView(withId(userProfileButton)).perform(click());
+        onView(withId(logoutButton)).perform(click());
     }
 
-    public void waitUntilPageLoaded() {
-        onView(isRoot()).perform(waitDisplayed(R.id.container_list_news_include_on_fragment_main, 10000));
-    }
-
-    public void goToMissionPage() {
-        missionButton.perform(click());
-    }
-
-
-    public void goToAllNewsButton() {
-        allNewsButton.perform(click());
+    public void clickMainMenuItem(String item) {
+        Allure.step("Выбор(клик) элемента в главном меню");
+        pageFunctional.clickItem(mainMenuButton);
+        onView(withText(item))
+                .inRoot(RootMatchers.isPlatformPopup())
+                .perform(click());
     }
 
 }

@@ -1,26 +1,28 @@
 package ru.iteco.fmhandroid.page;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
+import static ru.iteco.fmhandroid.data.TestUtils.withIndex;
 
-import androidx.test.espresso.ViewInteraction;
-
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 public class MissionPage {
-    ViewInteraction missionItemList = onView(withId(R.id.our_mission_item_list_recycler_view));
 
+    public static final int missionLogo = R.id.our_mission_item_open_card_image_button;
+    public static final int openQuoteButton = R.id.our_mission_item_open_card_image_button;
+    public static final int descriptionQuoteField = R.id.our_mission_item_description_text_view;
 
-    public void validatePageLoaded() {
-        missionItemList.check(matches(isDisplayed()));
+    public void openQuote(int position) {
+        Allure.step("Открытие цитаты");
+        onView(withIndex(withId(openQuoteButton), position)).perform(click());
     }
-
-    public void waitUntilPageLoaded() {
-        onView(isRoot()).perform(waitDisplayed(R.id.our_mission_item_list_recycler_view, 5000));
+    public void checkTextQuote(String description) {
+        Allure.step("Проверка текста цитаты");
+        onView(allOf(withId(descriptionQuoteField), withText(description), isDisplayed()));
     }
-
 }

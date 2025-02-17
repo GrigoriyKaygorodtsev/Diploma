@@ -3,84 +3,82 @@ package ru.iteco.fmhandroid.page;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
-import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 
-import android.widget.EditText;
-import androidx.test.espresso.ViewInteraction;
+import android.view.View;
+
+import androidx.test.espresso.matcher.RootMatchers;
+
+import org.hamcrest.CoreMatchers;
+
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 public class CreatingNewsPage {
-    ViewInteraction addNewsTitle = onView(withId(R.id.container_custom_app_bar_include_on_fragment_create_edit_news));
-    ViewInteraction categoryInputText = onView(withId(R.id.news_item_category_text_auto_complete_text_view));
-    ViewInteraction titleInputText = onView(withId(R.id.news_item_title_text_input_edit_text));
-    ViewInteraction dateInputText = onView(withId(R.id.news_item_publish_date_text_input_edit_text));
-    ViewInteraction timeInputText = onView(withId(R.id.news_item_publish_time_text_input_edit_text));
-    ViewInteraction descriptionInputText = onView(
-            allOf(
-                    isDescendantOfA(withId(R.id.news_item_description_text_input_layout)),
-                    isAssignableFrom(EditText.class)
-            )
-    );
-    ViewInteraction addNewsButton = onView(withId(R.id.save_button));
 
+    private static final int saveNewsButton = R.id.save_button;   //сохранить новую новость
+    private static final int categoryButton = com.google.android.material.R.id.text_input_end_icon;//кнопка выпадающего меню категория
+    private static final int datePublication = R.id.news_item_publish_date_text_input_edit_text;//дата публикации
+    private static final int timePublication = R.id.news_item_publish_time_text_input_edit_text;//время публикации
+    private static final int descriptionField = R.id.news_item_description_text_input_edit_text;//поле для описания новости
+    private static final int okButton = android.R.id.button1; //кнопка ОК
 
+    static PageFunctional pageFunctional = new PageFunctional();
 
-    public void validatePageLoaded() {
-        addNewsTitle.check(matches(isDisplayed()));
-        categoryInputText.check(matches(isDisplayed()));
-        titleInputText.check(matches(isDisplayed()));
-        dateInputText.check(matches(isDisplayed()));
-        timeInputText.check(matches(isDisplayed()));
-        descriptionInputText.check(matches(isDisplayed()));
-        addNewsButton.check(matches(isDisplayed()));
-    }
-
-    public void waitUntilPageLoaded() {
-        onView(isRoot()).perform(waitDisplayed(R.id.container_custom_app_bar_include_on_fragment_create_edit_news, 5000));
-    }
-
-    public void typeCategory(String category) {
-        categoryInputText.perform(replaceText(category), closeSoftKeyboard());
-    }
-
-    public void typeTitle(String title) {
-        titleInputText.perform(replaceText(title), closeSoftKeyboard());
-    }
-
-    public void typeDate() {
-        dateInputText.perform(click());
-        pressOK();
-    }
-
-    public void typeTime() {
-        timeInputText.perform(click());
-        pressOK();
-    }
-
-    public void typeDescription(String description) {
-        descriptionInputText.perform(replaceText(description), closeSoftKeyboard());
-    }
-
-    public void addNews() {
-        addNewsButton.perform(click());
-    }
-
-    private void pressOK(){
-        onView(isRoot()).perform(waitDisplayed(android.R.id.button1, 5000));
-        onView(withId(android.R.id.button1))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()))
+    public void chooseCategory(String title) {
+        Allure.step("Выбрать категорию новости: " + title);
+        onView(allOf(withId(categoryButton), withContentDescription("Show dropdown menu"))).perform(click());
+        onView(withText(title))
+                .inRoot(RootMatchers.isPlatformPopup())
                 .perform(click());
-        onView(isRoot()).perform(waitDisplayed(R.id.news_item_publish_time_text_input_edit_text, 6000));
     }
 
+    public void addNewsCurrentDate() {
+        Allure.step("Выбрать текущую дату новой Новости");
+        pageFunctional.clickItem(datePublication);
+        pageFunctional.clickItem(okButton);
+    }
+
+    public void addNewsCurrentTime() {
+        Allure.step("Выбрать текущее время новой Новости");
+        onView((withId(timePublication))).perform(click());
+        onView((withId(okButton))).perform(click());
+    }
+
+    public void addNewsDescription(String description) {
+        Allure.step("Добавить описание новой новости " + description);
+        onView(withId(descriptionField))
+                .perform(replaceText(description), closeSoftKeyboard());
+    }
+
+    public void saveFreshNews() {
+        Allure.step("Сохранение новой Новости");
+        onView((withId(saveNewsButton))).perform(scrollTo(), click());
+    }
+
+    public void checkToastErrorMessage(String messageError, View decorView) {
+        Allure.step("Появление всплывающего сообщения об ошибке Неверные данные");
+        onView(withText(messageError))
+                .inRoot(withDecorView(CoreMatchers.not(decorView)))
+                .check(matches(isDisplayed()));
+    }
+
+    public void addNewsInvalidDate(String date) {
+        Allure.step("Добавить некорректную дату новой Новости");
+        onView((withId(datePublication))).perform(longClick()).perform(replaceText(date), closeSoftKeyboard());
+    }
+
+    public static void addNewsInvalidTime(String time) {
+        Allure.step("Добавить некорректное время новой Новости");
+        onView((withId(timePublication))).perform(longClick()).perform(replaceText(time), closeSoftKeyboard());
+    }
 }

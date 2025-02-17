@@ -1,42 +1,70 @@
 package ru.iteco.fmhandroid.test;
 
-import static ru.iteco.fmhandroid.data.AuthorizationDataUtils.goToMainPage;
+import static ru.iteco.fmhandroid.data.AuthorizationData.LoginType;
+import static ru.iteco.fmhandroid.data.AuthorizationData.PasswordType;
+
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.filters.LargeTest;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import io.qameta.allure.Allure;
-import io.qameta.allure.Description;
-import io.qameta.allure.Story;
+import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
+import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
-import io.qameta.allure.kotlin.Feature;
-import ru.iteco.fmhandroid.ValidTest;
+import io.qameta.allure.kotlin.Story;
+import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
 import ru.iteco.fmhandroid.page.MissionPage;
+import ru.iteco.fmhandroid.page.PageFunctional;
+import ru.iteco.fmhandroid.ui.AppActivity;
 
-@Epic("Внутренние страницы приложения")
-@Feature("Цитаты")
-public class MissionPageTest extends ValidTest {
+
+@LargeTest
+@RunWith(AllureAndroidJUnit4.class)
+@Epic("проведения функционального тестирования вкладки 'Цитаты' мобильного приложения 'Мобильный хоспис'")
+public class MissionPageTest {
+
+    static LoginPage loginPage = new LoginPage();
+    static MissionPage quotesPage = new MissionPage();
+    static PageFunctional pageFunctional = new PageFunctional();
+
+    private final String title = "\"Хоспис в своем истинном понимании - это творчество\"";
+    private final String description = "Нет шаблона и стандарта, есть только дух, который живет " +
+            "в разных домах по-разному. Но всегда он добрый, любящий и помогающий.";
+    @Rule
+    public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
+            new ActivityScenarioRule<>(AppActivity.class);
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
+
+
     @Before
-    public void LoginType() {
-        goToMainPage();
+    public void setUp() {
+        try {
+            pageFunctional.waitPage(MainPage.mainPageTag);
+        } catch (Exception e) {
+            pageFunctional.waitPage(LoginPage.loginPageTag);
+            pageFunctional.selectField(LoginPage.loginInputText);
+            loginPage.feelField(LoginPage.loginInputText, LoginType);
+            pageFunctional.selectField(LoginPage.passwordInputText);
+            loginPage.feelField(LoginPage.passwordInputText, PasswordType);
+            pageFunctional.clickItem(LoginPage.signInButton);
+            pageFunctional.waitPage(MainPage.mainPageTag);
+            pageFunctional.PageIsReached(MainPage.mainPageTag);
+        }
     }
-
     @Test
-    @Story("Переход на страницу Цитаты")
-    @Description("Переход на страницу Цитаты с экрана Main")
-    public void goToAboutPageTest() {
-        Allure.step("Перейти на экран Main");
-        MainPage mainPage = new MainPage();
-
-        mainPage.waitUntilPageLoaded();
-        mainPage.validatePageLoaded();
-
-        Allure.step("Перейти на страницу с цитатами");
-        mainPage.goToMissionPage();
-
-        MissionPage missionPage = new MissionPage();
-        missionPage.waitUntilPageLoaded();
-        missionPage.validatePageLoaded();
+    @Story("Открытие цитаты")
+    @Description("Открытие цитаты в развернутом виде во вкладке 'Цитаты' мобильного приложения 'Мобильный хоспис'")
+    public void openingMissionPageTest() {
+        pageFunctional.clickItem(MainPage.quotesButton);
+        pageFunctional.waitPage(MissionPage.missionLogo);
+        quotesPage.openQuote(0);
+        quotesPage.checkTextQuote(description);
     }
 }

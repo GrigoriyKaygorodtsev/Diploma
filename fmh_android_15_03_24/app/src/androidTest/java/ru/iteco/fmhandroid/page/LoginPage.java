@@ -1,65 +1,52 @@
 package ru.iteco.fmhandroid.page;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.CoreMatchers.allOf;
+import static ru.iteco.fmhandroid.data.TestUtils.childAtPosition;
 import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
 
-import android.widget.EditText;
-
-import androidx.test.espresso.ViewInteraction;
-
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 
 public class LoginPage {
-    ViewInteraction loginInputText = onView(
-            allOf(
-                    isDescendantOfA(withId(R.id.login_text_input_layout)),
-                    isAssignableFrom(EditText.class)
-            )
-    );
-    ViewInteraction passwordInputText = onView(
-            allOf(
-                    isDescendantOfA(withId(R.id.password_text_input_layout)),
-                    isAssignableFrom(EditText.class)
-            )
-    );
-    ViewInteraction signInButton = onView(withId(R.id.enter_button));
 
-    public void validatePageLoaded() {
-        loginInputText.check(matches(isDisplayed()));
-        passwordInputText.check(matches(isDisplayed()));
-        signInButton.check(matches(isDisplayed()));
+    public static final int loginInputText = R.id.login_text_input_layout;
+    public static final int loginPageTag = loginInputText;
+    public static final int passwordInputText = R.id.password_text_input_layout;
+    public static final int signInButton = R.id.enter_button;
+
+
+    static PageFunctional pageFunctional = new PageFunctional();
+
+    public void waitLoginPage() {
+        onView(isRoot()).perform(waitDisplayed(R.id.splashscreen_image_view, 8_000));
+
     }
 
-    public void waitUntilPageLoaded() {
-        onView(isRoot()).perform(waitDisplayed(R.id.login_text_input_layout, 10_000));
+    public void feelField(int field, String inputText) {
+        Allure.step("Заполнение выбранного поля текстом: {inputText}");
+        onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withId(field),
+                                0),
+                        0)))
+                .perform(replaceText(inputText), closeSoftKeyboard());
     }
 
-    public void typeLogin(String LoginType) {
-        loginInputText.perform(replaceText(LoginType), closeSoftKeyboard());
-    }
-
-    public void typePassword(String PasswordType) {
-        passwordInputText.perform(replaceText(PasswordType), closeSoftKeyboard());
-    }
-
-    public void signIn() {
-        signInButton.perform(click());
-    }
-
-    public void waitUntilErrorMassageLoaded() {
+    public void isNotLogin() {
+        Allure.step("Проверка того, что войти в приложение (логин) НЕ удалось");
         try {
-            Thread.sleep(1_000);
-        } catch (Exception e){
+            pageFunctional.waitPage(MainPage.mainPageTag);
+        } catch (Exception e) {
+
+        } finally {
+            pageFunctional.PageIsReached(loginPageTag);
         }
     }
+
 }

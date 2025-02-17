@@ -1,145 +1,153 @@
 package ru.iteco.fmhandroid.test;
 
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static ru.iteco.fmhandroid.data.AuthorizationDataUtils.goToMainPage;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 
-import androidx.test.espresso.ViewInteraction;
+import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
+
+import android.view.View;
+
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.filters.LargeTest;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import java.util.Random;
+import org.junit.runner.RunWith;
 
-import io.qameta.allure.kotlin.Allure;
+import ru.iteco.fmhandroid.R;
+
+import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
-import io.qameta.allure.kotlin.Feature;
 import io.qameta.allure.kotlin.Story;
-import ru.iteco.fmhandroid.ValidTest;
-import ru.iteco.fmhandroid.page.ControlPanelPage;
+import ru.iteco.fmhandroid.data.AuthorizationData;
+import ru.iteco.fmhandroid.data.TestUtils;
 import ru.iteco.fmhandroid.page.CreatingNewsPage;
+import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
-import ru.iteco.fmhandroid.page.NavigationPage;
 import ru.iteco.fmhandroid.page.NewsPage;
-import ru.iteco.fmhandroid.page.NewsPage;
+import ru.iteco.fmhandroid.page.PageFunctional;
+import ru.iteco.fmhandroid.ui.AppActivity;
 
-@Epic("Внутренние страницы приложения")
-@Feature("Новости")
-public class NewsTest extends ValidTest{
+
+@LargeTest
+@RunWith(AllureAndroidJUnit4.class)
+@Epic("Проведение тестирования вкладки Новости мобильного приложения 'Мобильный хоспис'")
+
+public class NewsTest {
+    static LoginPage loginPage = new LoginPage();
+    static PageFunctional pageFunctional = new PageFunctional();
+    static NewsPage newsPage = new NewsPage();
+    static CreatingNewsPage creatingNewsPage = new CreatingNewsPage();
+    static MainPage mainPage = new MainPage();
+
+    private final String NewsTitle = "Объявление";
+    private final String newsMenuItem = "News";
+
+    private final String invalidDate = "55.66.0000";
+    private final String errorMessageWrongDate = "Invalid date!";
+
+    public View decorView;
+
+
+
+    @Rule
+    public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
+            new ActivityScenarioRule<>(AppActivity.class);
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
+
     @Before
-    public void LoginType() {
-        goToMainPage();
+    public void setUp() {
+        try {
+            pageFunctional.waitPage(MainPage.mainPageTag);
+        } catch (Exception e) {
+            pageFunctional.waitPage(LoginPage.loginPageTag);
+            pageFunctional.selectField(LoginPage.loginInputText);
+            loginPage.feelField(LoginPage.loginInputText, AuthorizationData.LoginType);
+            pageFunctional.selectField(LoginPage.passwordInputText);
+            loginPage.feelField(LoginPage.passwordInputText,AuthorizationData.PasswordType);
+            pageFunctional.clickItem(LoginPage.signInButton);
+            pageFunctional.waitPage(MainPage.mainPageTag);
+            pageFunctional.PageIsReached(MainPage.mainPageTag);
+        }
     }
 
-    public static String NEWS_CATEGORY = "Объявление";
-    public static String NEWS_TITLE = "Тестовая новость";
-    public static String NEWS_DESCRIPTION = "Тестовое описание";
-
-
+    @Story("Добавление новой новости с текущей датой и временем через 'Главное меню'")
+    @Description("Создание новой новости с текущей датой и временем через вкладку 'Главное меню' мобильного приложения 'Мобильный хоспис'")
     @Test
-    @Story("Работа с новостями")
-    @Description("Переход на экран с новостями")
-    public void goToNewsPageTest() {
-        NavigationPage navigationPage = new NavigationPage();
-        navigationPage.goToNewsPage();
-        NewsPage newsPage = new NewsPage();
-        newsPage.waitUntilPageLoaded();
-        newsPage.validatePageLoaded();
+    public void addFreshNewsCurrentDataMainMenuTest() {   //добавление новой новости через главное меню с текущей датой и временем
+        String newsDescription = TestUtils.getRandomNewsDescription();
+        mainPage.clickMainMenuItem(newsMenuItem);
+        pageFunctional.waitPage(NewsPage.newsList);
+        pageFunctional.clickItem(NewsPage.editNewsButton);
+        pageFunctional.clickItem(NewsPage.addNewsButton);
+        creatingNewsPage.chooseCategory(NewsTitle);
+        creatingNewsPage.addNewsCurrentDate();
+        creatingNewsPage.addNewsCurrentTime();
+        creatingNewsPage.addNewsDescription(newsDescription);
+        creatingNewsPage.saveFreshNews();
+        pageFunctional.waitPage(MainPage.mainPageTag);
+        mainPage.clickMainMenuItem(newsMenuItem);
+        pageFunctional.waitPage(NewsPage.newsList);
+        newsPage.clickFreshNews();
+        newsPage.findAddedNews(newsDescription);
+
     }
 
+    @Story("Добавление новой новости с текущей датой и временем")
+    @Description("Создание новой новости с текущей датой и временем во вкладке 'Новости' мобильного приложения 'Мобильный хоспис'")
     @Test
-    @Story("Работа с новостями")
-    @Description("Добавление новости")
-    public void addNewsTest() {
-        NavigationPage navigationPage = new NavigationPage();
-        navigationPage.goToNewsPage();
-        NewsPage newsPage = new NewsPage();
-        newsPage.waitUntilPageLoaded();
-        newsPage.validatePageLoaded();
-        newsPage.goToControlPanel();
-
-        ControlPanelPage controlPanelPage = new ControlPanelPage();
-        controlPanelPage.waitUntilPageLoaded();
-        controlPanelPage.validatePageLoaded();
-        controlPanelPage.addNews();
-
-        CreatingNewsPage creatingNewsPage = new CreatingNewsPage();
-        creatingNewsPage.waitUntilPageLoaded();
-        creatingNewsPage.validatePageLoaded();
-        creatingNewsPage.typeCategory(NEWS_CATEGORY);
-        String newsTitle = NEWS_TITLE + getRandomNumber();
-        creatingNewsPage.typeTitle(newsTitle);
-        creatingNewsPage.typeDate();
-        creatingNewsPage.typeTime();
-        creatingNewsPage.typeDescription(NEWS_DESCRIPTION);
-
-        creatingNewsPage.addNews();
-        controlPanelPage.waitUntilPageLoaded();
-
-        NavigationPage newsNavigationPage = new NavigationPage();
-        newsNavigationPage.goToNewsPage();
-        NewsPage createdNewsPage = new NewsPage();
-        ViewInteraction createdNews = controlPanelPage.findNewsByTitle(newsTitle);
-        createdNews.check(matches(isDisplayed()));
+    public void addFreshNewsCurrentDataTest() {
+        String newsDescription = TestUtils.getRandomNewsDescription();
+        pageFunctional.clickItem(MainPage.allNewsHeadline); //all news
+        pageFunctional.clickItem(NewsPage.editNewsButton);
+        pageFunctional.clickItem(NewsPage.addNewsButton);
+        creatingNewsPage.chooseCategory(NewsTitle);
+        creatingNewsPage.addNewsCurrentDate();
+        creatingNewsPage.addNewsCurrentTime();
+        creatingNewsPage.addNewsDescription(newsDescription);
+        creatingNewsPage.saveFreshNews();
+        pageFunctional.waitPage(MainPage.mainPageTag);
+        mainPage.clickMainMenuItem(newsMenuItem);
+        pageFunctional.waitPage(NewsPage.newsList);
+        newsPage.clickFreshNews();
+        onView(isRoot()).perform(waitDisplayed(R.id.news_item_description_text_view, 5000));
+        newsPage.findAddedNews(newsDescription);
     }
 
+    @Story("Фильтр новостей по категориям")
+    @Description("Фильтр новостей по выбранной категории во вкладке 'Новости' с помощью кнопки 'Фильтр' мобильного приложения 'Мобильный хоспис'")
     @Test
-    @Story("Работа с новостями")
-    @Description("Переход на экран с новостями по тапу на all news")
-    public void goToNewsPageByAllNewsTest() {
-        MainPage mainPage = new MainPage();
-        mainPage.waitUntilPageLoaded();
-        mainPage.validatePageLoaded();
-
-        mainPage.goToAllNewsButton();
-
-        NewsPage newsPage = new NewsPage();
-        newsPage.waitUntilPageLoaded();
-        newsPage.validatePageLoaded();
+    public void newsFilteringByCategoryTest() {
+        pageFunctional.clickItem(MainPage.allNewsHeadline); //all news
+        pageFunctional.waitPage(NewsPage.newsList);
+        pageFunctional.clickItem(NewsPage.filterNewsButton);
+        newsPage.chooseCategoryOfNews(NewsTitle);
+        newsPage.selectStartFilterTimeInterval();
+        newsPage.selectEndFilterTimeInterval();
+        pageFunctional.clickItem(NewsPage.applyFilterButton);
+        pageFunctional.waitPage(NewsPage.newsList);
+        newsPage.checkNewsCategory(NewsTitle, 0);
     }
 
+
+    @Story("Добавление новой новости с некорректной датой и корректным временем")
+    @Description("Попытка создания новой новости с некорректной датой и корректным временем во вкладке 'Новости' мобильного приложения 'Мобильный хоспис'")
     @Test
-    @Story("Работа с новостями")
-    @Description("Отображение расширенного описания новости")
-    public void checkNewsDescriptionVisibleTest() {
-        NavigationPage navigationPage = new NavigationPage();
-        navigationPage.goToNewsPage();
-
-        NewsPage newsPage = new NewsPage();
-        newsPage.waitUntilPageLoaded();
-        newsPage.validatePageLoaded();
-        newsPage.goToControlPanel();
-
-        ControlPanelPage controlPanelPage = new ControlPanelPage();
-        controlPanelPage.waitUntilPageLoaded();
-        controlPanelPage.validatePageLoaded();
-        controlPanelPage.addNews();
-
-        CreatingNewsPage creatingNewsPage = new CreatingNewsPage();
-        creatingNewsPage.waitUntilPageLoaded();
-        creatingNewsPage.validatePageLoaded();
-        creatingNewsPage.typeCategory(NEWS_CATEGORY);
-        String newsTitle = NEWS_TITLE + getRandomNumber();
-        creatingNewsPage.typeTitle(newsTitle);
-        creatingNewsPage.typeDate();
-        creatingNewsPage.typeTime();
-        String newsDescription = NEWS_DESCRIPTION + getRandomNumber();
-        creatingNewsPage.typeDescription(newsDescription);
-
-        creatingNewsPage.addNews();
-        controlPanelPage.waitUntilPageLoaded();
-
-        NavigationPage newsNavigationPage = new NavigationPage();
-        newsNavigationPage.goToNewsPage();
-        NewsPage createdNewsPage = new NewsPage();
-        ViewInteraction createdNews = controlPanelPage.findNewsByTitle(newsTitle);
-        createdNews.perform(click());
-
-        newsPage.checkNewsDescriptionVisible(newsDescription);
-    }
-
-    private String getRandomNumber(){
-        Random random = new Random();
-        return String.valueOf(random.nextInt(100_000));
+    public void addFreshNewsInvalidDateTest() {
+        String newsDescription = TestUtils.getRandomNewsDescription();
+        pageFunctional.clickItem(MainPage.allNewsHeadline); //all news
+        pageFunctional.clickItem(NewsPage.editNewsButton);
+        pageFunctional.clickItem(NewsPage.addNewsButton);
+        creatingNewsPage.chooseCategory(NewsTitle);
+        creatingNewsPage.addNewsInvalidDate(invalidDate);
+        creatingNewsPage.addNewsCurrentTime();
+        creatingNewsPage.addNewsDescription(newsDescription);
+        creatingNewsPage.saveFreshNews();
+        creatingNewsPage.checkToastErrorMessage(errorMessageWrongDate, decorView);
     }
 }

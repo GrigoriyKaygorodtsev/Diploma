@@ -50,10 +50,10 @@ public class LoginTests  {
     @Description("Тест успешного входа в аккаунт с валидными данными ")
     public void successfulLoginTest() {
         pageFunctional.waitPage(LoginPage.loginPageTag);
-        pageFunctional.selectField(LoginPage.loginInputText);
-        loginPage.feelField(LoginPage.loginInputText, AuthorizationData.LoginType);
-        pageFunctional.selectField(LoginPage.passwordInputText);
-        loginPage.feelField(LoginPage.passwordInputText,AuthorizationData.PasswordType);
+        pageFunctional.selectField(LoginPage.loginField);
+        loginPage.feelField(LoginPage.loginField, AuthorizationData.LoginType);
+        pageFunctional.selectField(LoginPage.passwordField);
+        loginPage.feelField(LoginPage.passwordField,AuthorizationData.PasswordType);
         pageFunctional.clickItem(LoginPage.signInButton);
         pageFunctional.waitPage(MainPage.mainPageTag);
         pageFunctional.PageIsReached(MainPage.mainPageTag);
@@ -64,12 +64,13 @@ public class LoginTests  {
     @Description("Проверка входа в систему с невалидным паролем")
     public void appLoginTestInvalidPassword() {
         pageFunctional.waitPage(LoginPage.loginPageTag);
-        pageFunctional.selectField(LoginPage.loginInputText);
-        loginPage.feelField(LoginPage.loginInputText, AuthorizationData.LoginType);
-        pageFunctional.selectField(LoginPage.passwordInputText);
-        loginPage.feelField(LoginPage.passwordInputText, AuthorizationData.InvalidPasswordType);
+        pageFunctional.selectField(LoginPage.loginField);
+        loginPage.feelField(LoginPage.loginField, AuthorizationData.LoginType);
+        pageFunctional.selectField(LoginPage.passwordField);
+        loginPage.feelField(LoginPage.passwordField, AuthorizationData.InvalidPasswordType);
         pageFunctional.clickItem(LoginPage.signInButton);
         loginPage.isNotLogin();
+        //        LoginPage.checkToastErrorMessage(errorLoginOrPassword, decorView);
     }
 
     @Test
@@ -77,10 +78,10 @@ public class LoginTests  {
     @Description("Проверка возможности входа с невалидным логином и паролем")
     public void appLoginTestInvalidLoginAndPassword() {
         pageFunctional.waitPage(LoginPage.loginPageTag);
-        pageFunctional.selectField(LoginPage.loginInputText);
-        loginPage.feelField(LoginPage.loginInputText, AuthorizationData.InvalidLoginType);
-        pageFunctional.selectField(LoginPage.passwordInputText);
-        loginPage.feelField(LoginPage.passwordInputText, AuthorizationData.InvalidPasswordType);
+        pageFunctional.selectField(LoginPage.loginField);
+        loginPage.feelField(LoginPage.loginField, AuthorizationData.InvalidLoginType);
+        pageFunctional.selectField(LoginPage.passwordField);
+        loginPage.feelField(LoginPage.passwordField, AuthorizationData.InvalidPasswordType);
         pageFunctional.clickItem(LoginPage.signInButton);
         loginPage.isNotLogin();
     }
@@ -90,10 +91,10 @@ public class LoginTests  {
     @Description("Проверка возможности входа с пустым полем ввода логина и пароля")
     public void appLoginTestEmplyLoginAndPassword() {
         pageFunctional.waitPage(LoginPage.loginPageTag);
-        pageFunctional.selectField(LoginPage.loginInputText);
-        loginPage.feelField(LoginPage.loginInputText, AuthorizationData.EmptyInputType);
-        pageFunctional.selectField(LoginPage.passwordInputText);
-        loginPage.feelField(LoginPage.passwordInputText, AuthorizationData.EmptyInputType);
+        pageFunctional.selectField(LoginPage.loginField);
+        loginPage.feelField(LoginPage.loginField, AuthorizationData.EmptyInputType);
+        pageFunctional.selectField(LoginPage.passwordField);
+        loginPage.feelField(LoginPage.passwordField, AuthorizationData.EmptyInputType);
         pageFunctional.clickItem(LoginPage.signInButton);
         loginPage.isNotLogin();
     }

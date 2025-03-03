@@ -7,8 +7,6 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static ru.iteco.fmhandroid.data.AuthorizationData.LoginType;
-import static ru.iteco.fmhandroid.data.AuthorizationData.PasswordType;
 
 import android.content.Intent;
 
@@ -27,6 +25,7 @@ import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
+import ru.iteco.fmhandroid.data.AuthorizationData;
 import ru.iteco.fmhandroid.page.AboutPage;
 import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
@@ -57,16 +56,17 @@ public class AboutPageTest {
             String.valueOf(System.currentTimeMillis()));
 
 
+
     @Before
     public void setUp() {
         try {
             pageFunctional.waitPage(MainPage.mainPageTag);
         } catch (Exception e) {
             pageFunctional.waitPage(LoginPage.loginPageTag);
-            pageFunctional.selectField(LoginPage.loginInputText);
-            loginPage.feelField(LoginPage.loginInputText, LoginType);
-            pageFunctional.selectField(LoginPage.passwordInputText);
-            loginPage.feelField(LoginPage.passwordInputText, PasswordType);
+            pageFunctional.selectField(LoginPage.loginField);
+            loginPage.feelField(LoginPage.loginField, AuthorizationData.LoginType);
+            pageFunctional.selectField(LoginPage.passwordField);
+            loginPage.feelField(LoginPage.passwordField, AuthorizationData.PasswordType);
             pageFunctional.clickItem(LoginPage.signInButton);
             pageFunctional.waitPage(MainPage.mainPageTag);
             pageFunctional.PageIsReached(MainPage.mainPageTag);
@@ -103,3 +103,4 @@ public class AboutPageTest {
         pressBack();
     }
 }
+

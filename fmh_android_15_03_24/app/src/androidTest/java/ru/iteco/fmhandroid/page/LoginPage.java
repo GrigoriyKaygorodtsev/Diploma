@@ -14,10 +14,13 @@ import ru.iteco.fmhandroid.R;
 
 public class LoginPage {
 
-    public static final int loginInputText = R.id.login_text_input_layout;
-    public static final int loginPageTag = loginInputText;
-    public static final int passwordInputText = R.id.password_text_input_layout;
+    public static final int loginField = R.id.login_text_input_layout;
+    public static final int loginPageTag = loginField;
+    public static final int passwordField = R.id.password_text_input_layout;
     public static final int signInButton = R.id.enter_button;
+    public static final String errorLoginOrPassword = "Wrong login or password";
+    public static final String errorEmptyField = "Login and password cannot be empty";
+
 
 
     static PageFunctional pageFunctional = new PageFunctional();
@@ -43,7 +46,7 @@ public class LoginPage {
         try {
             pageFunctional.waitPage(MainPage.mainPageTag);
         } catch (Exception e) {
-
+            //pageFunctional.PageIsReached(loginPageTag);
         } finally {
             pageFunctional.PageIsReached(loginPageTag);
         }

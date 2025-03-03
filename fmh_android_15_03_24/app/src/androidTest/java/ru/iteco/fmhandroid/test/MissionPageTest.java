@@ -1,8 +1,5 @@
 package ru.iteco.fmhandroid.test;
 
-import static ru.iteco.fmhandroid.data.AuthorizationData.LoginType;
-import static ru.iteco.fmhandroid.data.AuthorizationData.PasswordType;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 
@@ -16,6 +13,7 @@ import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
+import ru.iteco.fmhandroid.data.AuthorizationData;
 import ru.iteco.fmhandroid.page.LoginPage;
 import ru.iteco.fmhandroid.page.MainPage;
 import ru.iteco.fmhandroid.page.MissionPage;
@@ -49,10 +47,10 @@ public class MissionPageTest {
             pageFunctional.waitPage(MainPage.mainPageTag);
         } catch (Exception e) {
             pageFunctional.waitPage(LoginPage.loginPageTag);
-            pageFunctional.selectField(LoginPage.loginInputText);
-            loginPage.feelField(LoginPage.loginInputText, LoginType);
-            pageFunctional.selectField(LoginPage.passwordInputText);
-            loginPage.feelField(LoginPage.passwordInputText, PasswordType);
+            pageFunctional.selectField(LoginPage.loginField);
+            loginPage.feelField(LoginPage.loginField, AuthorizationData.LoginType);
+            pageFunctional.selectField(LoginPage.passwordField);
+            loginPage.feelField(LoginPage.passwordField, AuthorizationData.PasswordType);
             pageFunctional.clickItem(LoginPage.signInButton);
             pageFunctional.waitPage(MainPage.mainPageTag);
             pageFunctional.PageIsReached(MainPage.mainPageTag);

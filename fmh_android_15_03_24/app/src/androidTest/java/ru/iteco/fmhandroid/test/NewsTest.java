@@ -2,7 +2,6 @@ package ru.iteco.fmhandroid.test;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-
 import static ru.iteco.fmhandroid.data.TestUtils.waitDisplayed;
 
 import android.view.View;
@@ -15,13 +14,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.iteco.fmhandroid.R;
-
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Description;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.data.AuthorizationData;
 import ru.iteco.fmhandroid.data.TestUtils;
 import ru.iteco.fmhandroid.page.CreatingNewsPage;
@@ -37,6 +35,9 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 @Epic("Проведение тестирования вкладки Новости мобильного приложения 'Мобильный хоспис'")
 
 public class NewsTest {
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
+            String.valueOf(System.currentTimeMillis()));
     static LoginPage loginPage = new LoginPage();
     static PageFunctional pageFunctional = new PageFunctional();
     static NewsPage newsPage = new NewsPage();
@@ -46,19 +47,17 @@ public class NewsTest {
     private final String NewsTitle = "Объявление";
     private final String newsMenuItem = "News";
 
-    private final String invalidDate = "55.66.0000";
+    private final String invalidDate = "01.11.1001";
+    private final String invalidTime = "25:75";
     private final String errorMessageWrongDate = "Invalid date!";
+    private final String errorMessageWrongTime = "Invalid time!";
 
     public View decorView;
-
-
 
     @Rule
     public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
-    @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
-            String.valueOf(System.currentTimeMillis()));
+
 
     @Before
     public void setUp() {
@@ -66,10 +65,10 @@ public class NewsTest {
             pageFunctional.waitPage(MainPage.mainPageTag);
         } catch (Exception e) {
             pageFunctional.waitPage(LoginPage.loginPageTag);
-            pageFunctional.selectField(LoginPage.loginInputText);
-            loginPage.feelField(LoginPage.loginInputText, AuthorizationData.LoginType);
-            pageFunctional.selectField(LoginPage.passwordInputText);
-            loginPage.feelField(LoginPage.passwordInputText,AuthorizationData.PasswordType);
+            pageFunctional.selectField(LoginPage.loginField);
+            loginPage.feelField(LoginPage.loginField, AuthorizationData.LoginType);
+            pageFunctional.selectField(LoginPage.passwordField);
+            loginPage.feelField(LoginPage.passwordField,AuthorizationData.PasswordType);
             pageFunctional.clickItem(LoginPage.signInButton);
             pageFunctional.waitPage(MainPage.mainPageTag);
             pageFunctional.PageIsReached(MainPage.mainPageTag);
@@ -149,5 +148,21 @@ public class NewsTest {
         creatingNewsPage.addNewsDescription(newsDescription);
         creatingNewsPage.saveFreshNews();
         creatingNewsPage.checkToastErrorMessage(errorMessageWrongDate, decorView);
+    }
+
+    @Story("Добавление новой новости с корректной датой и некорректным временем")
+    @Description("Попытка создания новой новости с корректной датой и некорректным временем во вкладке 'Новости' мобильного приложения 'Мобильный хоспис'")
+    @Test
+    public void addFreshNewsInvalidTimeTest() {
+        String newsDescription = TestUtils.getRandomNewsDescription();
+        pageFunctional.clickItem(mainPage.allNewsHeadline); //all news
+        pageFunctional.clickItem(NewsPage.editNewsButton);
+        pageFunctional.clickItem(NewsPage.addNewsButton);
+        creatingNewsPage.chooseCategory(NewsTitle);
+        creatingNewsPage.addNewsCurrentDate();
+        creatingNewsPage.addNewsInvalidTime(invalidTime);
+        creatingNewsPage.addNewsDescription(newsDescription);
+        creatingNewsPage.saveFreshNews();
+        creatingNewsPage.checkToastErrorMessage(errorMessageWrongTime, decorView);
     }
 }

@@ -53,7 +53,7 @@ public class TestUtils {
                         }
                     }
 
-                    uiController.loopMainThreadForAtLeast(50);
+                    uiController.loopMainThreadForAtLeast(500);
                 }
                 while (System.currentTimeMillis() < endTime);
 

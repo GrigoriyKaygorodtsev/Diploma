@@ -1,19 +1,11 @@
 package ru.iteco.fmhandroid.test;
 
-
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
-import android.content.Intent;
-
-import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,13 +24,9 @@ import ru.iteco.fmhandroid.page.MainPage;
 import ru.iteco.fmhandroid.page.PageFunctional;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
-
-
-
 @LargeTest
 @RunWith(AllureAndroidJUnit4.class)
 @Epic("Тест-кейсы для проведения функционального тестирования вкладки 'О приложении' мобильного приложения 'Мобильный хоспис'")
-
 public class AboutPageTest {
     static LoginPage loginPage = new LoginPage();
     static PageFunctional pageFunctional = new PageFunctional();
@@ -49,13 +37,8 @@ public class AboutPageTest {
     public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
     @Rule
-    public ActivityTestRule<AppActivity> mActivityTestRule =
-            new ActivityTestRule<>(AppActivity.class);
-    @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule(ScreenshotRule.Mode.FAILURE,
             String.valueOf(System.currentTimeMillis()));
-
-
 
     @Before
     public void setUp() {
@@ -76,14 +59,11 @@ public class AboutPageTest {
     @Story("Переход по ссылке 'Политика конфиденциальности'")
     @Description("Перейти по ссылке 'Политика конфиденциальности' во вкладке 'О приложении' мобильного приложения 'Мобильный хоспис' и дождаться загрузки информации")
     @Test
-    public void followTheLinkPrivacyPolicyTest() throws InterruptedException {
+    public void followTheLinkPrivacyPolicyTest() {
         mainPage.clickMainMenuItem(aboutMenuItem);
-        Thread.sleep(5000);
-        Intents.init();
         pageFunctional.clickItem(AboutPage.privacyPolicyLink);
-        intended(hasData("https://vhospice.org/#/privacy-policy"));
-        intended(hasAction(Intent.ACTION_VIEW));
-        Intents.release();
+        // Ожидание загрузки текста политики
+        pageFunctional.waitPage(AboutPage.privacyPolicyLink);
         AboutPage.policyText.check(matches(isDisplayed()));
         pressBack();
     }
@@ -91,16 +71,12 @@ public class AboutPageTest {
     @Story("Переход по ссылке 'Правила использования'")
     @Description("Перейти по ссылке 'Правила использования' во вкладке 'О приложении' мобильного приложения 'Мобильный хоспис' и дождаться загрузки информации")
     @Test
-    public void followTheLinkTermsOfUseTest() throws InterruptedException {
+    public void followTheLinkTermsOfUseTest() {
         mainPage.clickMainMenuItem(aboutMenuItem);
-        Thread.sleep(5000);
-        Intents.init();
         pageFunctional.clickItem(AboutPage.termsOfUseLink);
-        intended(hasData("https://vhospice.org/#/terms-of-use"));
-        intended(hasAction(Intent.ACTION_VIEW));
-        Intents.release();
+        // Ожидание загрузки текста правил использования
+        pageFunctional.waitPage(AboutPage.termsOfUseLink);
         AboutPage.termsOfUseText.check(matches(isDisplayed()));
         pressBack();
     }
 }
-

@@ -26,7 +26,7 @@ public class PageFunctional {
     }
 
     public void PageIsReached(int pageMarker) {
-        Allure.step("Проверка отображения страницы с указанным элементом");
+        Allure.step("Проверка, что отображается страница с указанным элементом");
         ViewInteraction marker = onView(withId(pageMarker)).check(matches(isDisplayed()));
     }
 

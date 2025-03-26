@@ -47,8 +47,8 @@ public class NewsTest {
     private final String NewsTitle = "Объявление";
     private final String newsMenuItem = "News";
 
-    private final String invalidDate = "01.11.1001";
-    private final String invalidTime = "25:75";
+    private final String invalidDate = "11.11.1111";
+    private final String invalidTime = "26:75";
     private final String errorMessageWrongDate = "Invalid date!";
     private final String errorMessageWrongTime = "Invalid time!";
 
@@ -155,7 +155,7 @@ public class NewsTest {
     @Test
     public void addFreshNewsInvalidTimeTest() {
         String newsDescription = TestUtils.getRandomNewsDescription();
-        pageFunctional.clickItem(mainPage.allNewsHeadline); //all news
+        pageFunctional.clickItem(MainPage.allNewsHeadline); //all news
         pageFunctional.clickItem(NewsPage.editNewsButton);
         pageFunctional.clickItem(NewsPage.addNewsButton);
         creatingNewsPage.chooseCategory(NewsTitle);

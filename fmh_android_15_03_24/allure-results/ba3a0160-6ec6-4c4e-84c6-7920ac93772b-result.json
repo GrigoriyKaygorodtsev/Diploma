@@ -1,0 +1,109 @@
+{
+    "name": "successfulLoginTest",
+    "start": 1743602655548,
+    "stop": 1743602674691,
+    "stage": "finished",
+    "description": "Тест успешного входа в аккаунт с валидными данными ",
+    "descriptionHtml": null,
+    "status": "passed",
+    "statusDetails": null,
+    "steps": [
+        {
+            "name": "log out (выход из профиля)",
+            "start": 1743602671602,
+            "stop": 1743602671603,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        },
+        {
+            "name": "Заполнение выбранного поля текстом: {inputText}",
+            "start": 1743602672676,
+            "stop": 1743602672676,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        },
+        {
+            "name": "Заполнение выбранного поля текстом: {inputText}",
+            "start": 1743602673322,
+            "stop": 1743602673322,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        }
+    ],
+    "attachments": [
+    ],
+    "parameters": [
+    ],
+    "uuid": "ba3a0160-6ec6-4c4e-84c6-7920ac93772b",
+    "historyId": "da5336a4015263eb8ab988fdb7fa3097",
+    "fullName": "ru.iteco.fmhandroid.test.LoginTests.successfulLoginTest",
+    "labels": [
+        {
+            "name": "package",
+            "value": "ru.iteco.fmhandroid.test"
+        },
+        {
+            "name": "testClass",
+            "value": "ru.iteco.fmhandroid.test.LoginTests"
+        },
+        {
+            "name": "testMethod",
+            "value": "successfulLoginTest"
+        },
+        {
+            "name": "suite",
+            "value": "ru.iteco.fmhandroid.test.LoginTests"
+        },
+        {
+            "name": "host",
+            "value": "localhost"
+        },
+        {
+            "name": "thread",
+            "value": "Instr: androidx.test.runner.AndroidJUnitRunner(541)"
+        },
+        {
+            "name": "framework",
+            "value": "junit4"
+        },
+        {
+            "name": "language",
+            "value": "kotlin"
+        },
+        {
+            "name": "feature",
+            "value": "Вход в систему"
+        },
+        {
+            "name": "epic",
+            "value": "Авторизация"
+        }
+    ]
+}

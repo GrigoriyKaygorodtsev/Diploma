@@ -1,0 +1,109 @@
+{
+    "name": "appLoginTestEmplyLoginAndPassword",
+    "start": 1743602784330,
+    "stop": 1743602804933,
+    "stage": "finished",
+    "description": "Проверка возможности входа с пустым полем ввода логина и пароля",
+    "descriptionHtml": null,
+    "status": "passed",
+    "statusDetails": null,
+    "steps": [
+        {
+            "name": "Заполнение выбранного поля текстом: {inputText}",
+            "start": 1743602788271,
+            "stop": 1743602788271,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        },
+        {
+            "name": "Заполнение выбранного поля текстом: {inputText}",
+            "start": 1743602788888,
+            "stop": 1743602788888,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        },
+        {
+            "name": "Проверка того, что войти в приложение (логин) НЕ удалось",
+            "start": 1743602789558,
+            "stop": 1743602789558,
+            "stage": "finished",
+            "description": null,
+            "descriptionHtml": null,
+            "status": "passed",
+            "statusDetails": null,
+            "steps": [
+            ],
+            "attachments": [
+            ],
+            "parameters": [
+            ]
+        }
+    ],
+    "attachments": [
+    ],
+    "parameters": [
+    ],
+    "uuid": "f8f10ef4-bba7-4eee-afbb-edb237aebced",
+    "historyId": "d767f0d5d0f1e26b60aea661def528df",
+    "fullName": "ru.iteco.fmhandroid.test.LoginTests.appLoginTestEmplyLoginAndPassword",
+    "labels": [
+        {
+            "name": "package",
+            "value": "ru.iteco.fmhandroid.test"
+        },
+        {
+            "name": "testClass",
+            "value": "ru.iteco.fmhandroid.test.LoginTests"
+        },
+        {
+            "name": "testMethod",
+            "value": "appLoginTestEmplyLoginAndPassword"
+        },
+        {
+            "name": "suite",
+            "value": "ru.iteco.fmhandroid.test.LoginTests"
+        },
+        {
+            "name": "host",
+            "value": "localhost"
+        },
+        {
+            "name": "thread",
+            "value": "Instr: androidx.test.runner.AndroidJUnitRunner(556)"
+        },
+        {
+            "name": "framework",
+            "value": "junit4"
+        },
+        {
+            "name": "language",
+            "value": "kotlin"
+        },
+        {
+            "name": "epic",
+            "value": "Авторизация"
+        },
+        {
+            "name": "feature",
+            "value": "Вход в систему"
+        }
+    ]
+}

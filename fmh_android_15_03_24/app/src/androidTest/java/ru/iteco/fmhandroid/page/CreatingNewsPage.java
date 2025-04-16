@@ -26,7 +26,7 @@ import ru.iteco.fmhandroid.R;
 public class CreatingNewsPage {
 
     private static final int saveNewsButton = R.id.save_button;   //сохранить новую новость
-    private static final int categoryButton = com.google.android.material.R.id.text_input_end_icon;//кнопка выпадающего меню категория
+    private static final int categoryButton = R.id.text_input_end_icon;//кнопка выпадающего меню категория
     private static final int datePublication = R.id.news_item_publish_date_text_input_edit_text;//дата публикации
     private static final int timePublication = R.id.news_item_publish_time_text_input_edit_text;//время публикации
     private static final int descriptionField = R.id.news_item_description_text_input_edit_text;//поле для описания новости

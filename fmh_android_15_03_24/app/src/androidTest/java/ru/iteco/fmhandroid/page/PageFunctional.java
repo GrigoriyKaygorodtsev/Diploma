@@ -32,6 +32,6 @@ public class PageFunctional {
 
     public void waitPage(int pageMarker) {
         Allure.step("Ожидание загрузки страницы с указанным элементом");
-        onView(isRoot()).perform(waitDisplayed(pageMarker,15000 ));
+        onView(isRoot()).perform(waitDisplayed(pageMarker,15000));
     }
 }
